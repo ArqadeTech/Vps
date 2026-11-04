@@ -1,0 +1,29 @@
+services:
+  kali:
+    build:
+      context: .
+      args:
+        KALI_META: ${KALI_META:-kali-linux-headless}
+    restart: unless-stopped
+    environment:
+      TTYD_USER: ${TTYD_USER:-kali}
+      TTYD_PASSWORD: ${TTYD_PASSWORD:?set TTYD_PASSWORD}
+    cap_add: [NET_ADMIN, NET_RAW]   # nmap raw scans, etc.
+    volumes:
+      - kali-home:/home/kali
+    expose: ["7681"]                # not published; only Caddy can reach it
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    depends_on: [kali]
+
+volumes:
+  kali-home:
+  caddy-data:
