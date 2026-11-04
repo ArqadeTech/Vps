@@ -1,0 +1,7 @@
+{
+  "name": "private-kali",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Private Vercel gateway to a self-hosted Kali Linux machine",
+  "engines": { "node": ">=20" }
+}
